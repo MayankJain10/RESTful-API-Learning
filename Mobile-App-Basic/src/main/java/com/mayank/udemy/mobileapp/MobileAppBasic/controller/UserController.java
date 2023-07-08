@@ -36,6 +36,10 @@ public class UserController {
 	 * Concept of query String parameters.
 	 * In this method pass the value in query String parameters.
 	 * page and limit are the query string parameters and by default required true. 
+	 * 
+	 * required=false, is use with the String type parameters, if we use with the int type then it gives error,
+	 * because it cannot translate to null.
+	 * 
 	 * @param page
 	 * @param limit
 	 * @return users with limit
