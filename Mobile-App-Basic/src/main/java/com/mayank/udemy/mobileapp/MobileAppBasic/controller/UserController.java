@@ -31,7 +31,7 @@ import com.mayank.udemy.mobileapp.MobileAppBasic.Model.Response.Users;
  * 
  */
 @RestController
-@RequestMapping(value = "users") // http://localhost:8080
+@RequestMapping(value = "api") // http://localhost:8080
 public class UserController {
 	
 	Map<String, Users>user = null;
@@ -47,7 +47,7 @@ public class UserController {
 	 * @return userId
 	 */
 
-	@GetMapping(path = "/{userId}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
+	@GetMapping(path = "get/User/Details/{userId}", produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Users> getUser(@PathVariable String userId) {
 
 		/*Users userInfo = new Users();
@@ -55,6 +55,11 @@ public class UserController {
 		userInfo.setFirstName("Mayank");
 		userInfo.setLastName("Jain");
 		userInfo.setEmail("Mayank.Jain@airlinq.com");*/
+		
+		String firstName = null;
+		//
+		//
+		int firstNameLength = firstName.length();
 		
 		if(user.containsKey(userId)) {
 			return new ResponseEntity<>(user.get(userId), HttpStatus.OK);
@@ -91,11 +96,12 @@ public class UserController {
 	 * Storing the value temporarily in the map after creating user,
 	 * Map is declared on the top of all the methods.
 	 * UserDetails model class is used.
+	 * 
 	 * @param userDetails
 	 * @return user information
 	 */
 
-	@PostMapping(consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }, 
+	@PostMapping(path = "create/User", consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }, 
 				 produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Users> createUser(@Valid @RequestBody UserDetails userDetails) {
 
@@ -121,12 +127,13 @@ public class UserController {
 	 * updating user details on the basis of userId
 	 * Fetching details from the temporarily map, and then on the basis of userId updating
 	 * the first name and last name.
+	 * 
 	 * @param userId
 	 * @param updateUserDetailsRequestModel
 	 * @return updated user details
 	 */
 
-	@PutMapping(path = "/{userId}",consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }, 
+	@PutMapping(path = "update/User/Details/{userId}",consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }, 
 				 produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public Users updateUser(@PathVariable String userId, @RequestBody UpdateUserDetailsRequestModel updateUserDetailsRequestModel) {
 		
@@ -139,10 +146,11 @@ public class UserController {
 		return storedUserDetails;
 	}
 
-	@DeleteMapping
-	public String deleteUser() {
+	@DeleteMapping(path = "delete/User/Details/{id}")
+	public ResponseEntity<Void> deleteUser(@PathVariable String id) {
 
-		return "delete user was called!";
+		user.remove(id);
+		return ResponseEntity.noContent().build();
 	}
 
 }
