@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +20,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.mayank.udemy.mobileapp.MobileAppBasic.Exception.UserServiceException;
 import com.mayank.udemy.mobileapp.MobileAppBasic.Model.Request.UpdateUserDetailsRequestModel;
 import com.mayank.udemy.mobileapp.MobileAppBasic.Model.Request.UserDetails;
 import com.mayank.udemy.mobileapp.MobileAppBasic.Model.Response.Users;
+import com.mayank.udemy.mobileapp.MobileAppBasic.ServiceImpl.UserServiceImpl;
+import com.mayank.udemy.mobileapp.MobileAppBasic.service.UserService;
 
 /**
  * 
@@ -33,6 +37,9 @@ import com.mayank.udemy.mobileapp.MobileAppBasic.Model.Response.Users;
 @RestController
 @RequestMapping(value = "api") // http://localhost:8080
 public class UserController {
+	
+	@Autowired
+	private UserService userService;
 	
 	Map<String, Users>user = null;
 
@@ -52,14 +59,18 @@ public class UserController {
 
 		/*Users userInfo = new Users();
 
-		userInfo.setFirstName("Mayank");
+		userInfo.setFirstName("");
 		userInfo.setLastName("Jain");
 		userInfo.setEmail("Mayank.Jain@airlinq.com");*/
 		
-		String firstName = null;
+		/*String firstName = null;
 		//
 		//
-		int firstNameLength = firstName.length();
+		int firstNameLength = firstName.length();*/
+		
+		/*if(true) {
+			throw new UserServiceException("A user service exception is thrown");
+		}*/
 		
 		if(user.containsKey(userId)) {
 			return new ResponseEntity<>(user.get(userId), HttpStatus.OK);
@@ -104,22 +115,10 @@ public class UserController {
 	@PostMapping(path = "create/User", consumes = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE }, 
 				 produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public ResponseEntity<Users> createUser(@Valid @RequestBody UserDetails userDetails) {
-
-		Users userInfo = new Users();
-
-		userInfo.setFirstName(userDetails.getFirstName());
-		userInfo.setLastName(userDetails.getLastName());
-		userInfo.setEmail(userDetails.getEmail());
 		
-		String userId = UUID.randomUUID().toString();
-		userInfo.setUserId(userId);
+		Users returnValue = userService.createUser(userDetails);
 		
-		if(user==null) {
-			user = new HashMap<>();
-			user.put(userId, userInfo);
-		}
-		
-		return new ResponseEntity<Users>(userInfo, HttpStatus.OK);
+		return new ResponseEntity<Users>(returnValue, HttpStatus.OK);
 	}
 	
 	/**
@@ -137,13 +136,9 @@ public class UserController {
 				 produces = { MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_JSON_VALUE })
 	public Users updateUser(@PathVariable String userId, @RequestBody UpdateUserDetailsRequestModel updateUserDetailsRequestModel) {
 		
-		Users storedUserDetails = user.get(userId);
-		storedUserDetails.setFirstName(updateUserDetailsRequestModel.getFirstName());
-		storedUserDetails.setLastName(updateUserDetailsRequestModel.getLastName());
-		 
-		user.put(userId, storedUserDetails);
+		Users returnValue = userService.updateUser(userId, updateUserDetailsRequestModel);
 
-		return storedUserDetails;
+		return returnValue;
 	}
 
 	@DeleteMapping(path = "delete/User/Details/{id}")
