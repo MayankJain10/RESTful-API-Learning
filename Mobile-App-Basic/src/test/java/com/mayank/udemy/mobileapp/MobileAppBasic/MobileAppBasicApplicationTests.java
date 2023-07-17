@@ -4,10 +4,14 @@ import org.junit.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MobileAppBasicApplicationTests {
+public class MobileAppBasicApplicationTests {
+	
+	public MobileAppBasicApplicationTests() {
+		
+	}
 
 	@Test
-	void contextLoads() {
+	public void contextLoads() {
 	}
 
 }

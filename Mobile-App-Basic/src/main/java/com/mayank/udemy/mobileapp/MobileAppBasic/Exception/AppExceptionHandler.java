@@ -30,7 +30,7 @@ public class AppExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	
 	@ExceptionHandler(value= {NullPointerException.class, UserServiceException.class})
-	public ResponseEntity<Object>handleAnyNullPointerException(Exception e, WebRequest request){
+	public ResponseEntity<Object>handleSpecificException(Exception e, WebRequest request){
 		
 		String errorMessageDescription = e.getLocalizedMessage();
 		if(errorMessageDescription == null) {

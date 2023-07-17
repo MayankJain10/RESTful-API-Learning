@@ -4,17 +4,30 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mayank.udemy.mobileapp.MobileAppBasic.Model.Request.UpdateUserDetailsRequestModel;
 import com.mayank.udemy.mobileapp.MobileAppBasic.Model.Request.UserDetails;
 import com.mayank.udemy.mobileapp.MobileAppBasic.Model.Response.Users;
+import com.mayank.udemy.mobileapp.MobileAppBasic.Shared.Utils;
 import com.mayank.udemy.mobileapp.MobileAppBasic.service.UserService;
 
 @Service
 public class UserServiceImpl implements UserService{
 	
-	Map<String, Users>user = null;
+	Map<String, Users>user;
+	
+	Utils utils;
+	
+	public UserServiceImpl() {
+		
+	}
+	
+	@Autowired
+	public UserServiceImpl(Utils utils) {
+		this.utils = utils;
+	}
 
 	@Override
 	public Users createUser(UserDetails userDetails) {
@@ -24,7 +37,7 @@ public class UserServiceImpl implements UserService{
 		userInfo.setLastName(userDetails.getLastName());
 		userInfo.setEmail(userDetails.getEmail());
 		
-		String userId = UUID.randomUUID().toString();
+		String userId = utils.generateUserId();
 		userInfo.setUserId(userId);
 		
 		if(user==null) {
